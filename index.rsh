@@ -37,7 +37,7 @@ export const main = Reach.App(() => {
         const id = NftsCount + 1
         const NftMetadata = declassify(interact.metadata)
         const NftPrice = declassify(interact.price)
-        assert(NftPrice>0, 'Price cannot be null')
+        //;;assert(NftPrice>0, 'Price cannot be null')
         //const myNft = NFT(id, NftMetadata, NftPrice)
         const myNft = {
             id:id,
