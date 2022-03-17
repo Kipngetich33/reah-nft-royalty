@@ -52,8 +52,8 @@ export const main = Reach.App(() => {
         const nftToBuyPrice = declassify(interact.price)
     })
 
-    NftBuyer.publish(nftToBuyId, nftToBuyPrice)
+    /*NftBuyer.publish(nftToBuyId, nftToBuyPrice)
      .pay(nftToBuyPrice)
-    commit()
+    commit()*/
 
 })
