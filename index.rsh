@@ -4,56 +4,46 @@
 // Royalty will go the cerator of the art peace 
 
 'reach 0.1';
+
+const nftData = {
+    id: UInt,
+    metadata: Bytes(64),
+    price:UInt,
+    creator: Address,
+    owner: Address
+}
+
 export const main = Reach.App(() => {
 
-    const NFT = {
-        id: UInt,
-        metadata: Bytes(64),
-        price:UInt,
-        creator: Address,
-        owner: Address
-    }
-
-    const NftsCount = 0
-
-    //const NFTs = []  this array will contain all nfts
-
-    const NftCreator = Participant('creator', {
+    const nftCreator = Participant('creator', {
         metadata:Bytes(64),
         price:UInt,
-        //getData:Fun([], UInt)
+        mintNft: Fun([], null),
     })
-    const NftBuyer = Participant('buyer', {
-        NftId:UInt,
-        price:UInt
+    const nftBuyer = Participant('buyer', {
+        nftId:UInt,
+        buyNft:Fun([], null),
     })
-    /*const NftSeller = Participant('seller', {
-
-    });*/
 
     init() 
 
-    NftCreator.only(() => {
-        const id = NftsCount + 1
-        const NftMetadata = declassify(interact.metadata)
-        const NftPrice = declassify(interact.price)
-        //;;assert(NftPrice>0, 'Price cannot be null')
-        //const myNft = NFT(id, NftMetadata, NftPrice)
-        const myNft = {
-            id:id,
-            NftMetadata:NftMetadata
-        }
+    nftCreator.only(() => {
+        const nftMetadata = declassify(interact.metadata)
+        const nftPrice = declassify(interact.price)
     })
-    NftCreator.publish(myNft)
-    commit()  
+    nftCreator.publish(nftMetadata, nftPrice )
+    /*nftCreator.mintNft(() => {
+        assert(nftMetadata !='', 'Metadata cannot be null or empty')
+        assert(nftPrice > 0, 'Please, set a price for your art piece')
+        const myNft = nftData(0, nftMetadata, nftPrice, address[this], address[this])
+        allNfts[this] = myNft
+    })*/
 
-    NftBuyer.only(() => {
-        const nftToBuyId = declassify(interact.NftId) 
-        const nftToBuyPrice = declassify(interact.price)
-    })
 
-    /*NftBuyer.publish(nftToBuyId, nftToBuyPrice)
-     .pay(nftToBuyPrice)
-    commit()*/
+    nftBuyer.only(() => {
+        const id = declassify(interact.nftId) 
+    })    
+    nftBuyer.publish(id)
 
+    const allNfts = new Map(Object(nftData))
 })
