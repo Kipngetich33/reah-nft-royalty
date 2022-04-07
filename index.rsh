@@ -5,21 +5,16 @@
 
 'reach 0.1';
 
-const nftData = {
-    id: UInt,
-    metadata: Bytes(64),
-    price:UInt,
-    creator: Address,
-    owner: Address
-}
+const allNfts = new Map()
 
 export const main = Reach.App(() => {
 
     const nftCreator = Participant('creator', {
         metadata:Bytes(64),
         price:UInt,
-        mintNft: Fun([], null)
+        mintNft: Fun([metadata, price], null)
     })
+
     const nftBuyer = Participant('buyer', {
         nftId:UInt,
         buyNft: Fun([], null),
@@ -27,14 +22,22 @@ export const main = Reach.App(() => {
 
     init() 
 
-    //const allNfts = new Map(Object(myNft))
-
     nftCreator.only(() => {
         const nftMetadata = declassify(interact.metadata)
         const nftPrice = declassify(interact.price)
+        interact.mintNft(nftMetadata, nftPrice)
     })
     nftCreator.publish(nftMetadata, nftPrice)
-    commit()
+    assert(nftMetadata != '', 'Metadata cannot be empty')
+    const myNFT = {
+        id: 1,
+        metadata: nftMetadata,
+        price: nftPrice,
+        creator: '0x0',
+        owner: '0x0'
+    }
+    //interact.mintNft()
+    //commit()
     /*nftCreator.mintNft(() => {
         assert(nftMetadata !='', 'Metadata cannot be null or empty')
         assert(nftPrice > 0, 'Please, set a price for your art piece')
@@ -42,9 +45,9 @@ export const main = Reach.App(() => {
         allNfts[this] = myNft
     })*/
 
-    nftBuyer.only(() => {
+   /* nftBuyer.only(() => {
         const id = declassify(interact.nftId) 
     })    
-    nftBuyer.publish(id)
+    nftBuyer.publish(id)*/
 
 })
