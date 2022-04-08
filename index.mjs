@@ -18,9 +18,7 @@ await Promise.all([
     contractBuyer.participants.buyer({
         nftId: 2,
         buyNft:(id) => {
-            for(var property in id) {
-                console.log(property +":"+ id[property]);
-            }
-        } //console.log(`Bro you bought this id:${id}`)
+            console.log(`Bro you sold this item id:${id}`)   
+        } 
     })
 ])

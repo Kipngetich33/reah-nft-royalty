@@ -22,11 +22,11 @@ export const main = Reach.App(() => {
     nftCreator.only(() => {
         const nftMetadata = declassify(interact.metadata)
         const nftPrice = declassify(interact.price)
-        //assert(nftMetadata == Bytes(0))
+        //assert(nftMetadata != Bytes(12).pad(''))
         interact.mintNft(nftMetadata, nftPrice)
     })
     nftCreator.publish(nftMetadata, nftPrice)
-    require(nftMetadata == Bytes(8), ['Metadata cannot be empty'])
+    //require(nftMetadata == Bytes(8).pad(''), ['Metadata cannot be empty'])
     const myNFT = {
         id: 1,
         metadata: nftMetadata,
@@ -34,16 +34,8 @@ export const main = Reach.App(() => {
         creator: nftCreator,
         owner: nftCreator
     }
-
-    /*const allNFTs = new Map(Address, Object({
-        id: UInt,
-        metadata: Bytes(64),
-        price: UInt,
-        creator: Address,
-        owner: Address
-    }))
-
-    allNFTs[this] = myNFT*/
+    const allNFTs =  new Map(Address) 
+    //allNFTs[this] = myNFT
     commit()
 
     nftBuyer.only(() => {

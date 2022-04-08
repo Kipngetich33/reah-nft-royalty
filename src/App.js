@@ -1,18 +1,20 @@
-import React, {useState} from 'react'
+import React from 'react'
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import * as backend from '../build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib'
+import Mint from '../Pages/mint'
 
 const reach = loadStdlib(process.env);
 const { standardUnit } = reach;
 
 function App() {
 
-  console.log(standardUnit.length)
-
   return (
-    <div>
-      hello world, Here is a simple reach app
-    </div>
+    <Router>
+      <Routes>
+        <Route path='/mint' component={Mint}/>
+      </Routes>
+    </Router>
   );
 }
 
