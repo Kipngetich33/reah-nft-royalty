@@ -13,6 +13,7 @@ await Promise.all([
     contractCreator.participants.creator({
         metadata:'https://merkim.dev',
         price: stdlib.parseCurrency(2),
+        royalty: 4,
         mintNft: (metadata, price) => console.log(`${metadata} costs ${price}.`),
     }),
     contractBuyer.participants.buyer({

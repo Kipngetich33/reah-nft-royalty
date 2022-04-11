@@ -9,7 +9,8 @@ export const main = Reach.App(() => {
     const nftCreator = Participant('creator', {
         metadata:Bytes(64),
         price:UInt,
-        mintNft: Fun([Bytes(64), UInt], Null)
+        royalty: UInt,
+        mintNft: Fun([Bytes(64), UInt], Null),
     })
 
     const nftBuyer = Participant('buyer', {
@@ -22,22 +23,25 @@ export const main = Reach.App(() => {
     nftCreator.only(() => {
         const nftMetadata = declassify(interact.metadata)
         const nftPrice = declassify(interact.price)
+        const royalty = declassify(interact.royalty)
         //assert(nftMetadata != Bytes(12).pad(''))
-        interact.mintNft(nftMetadata, nftPrice)
+        interact.mintNft(nftMetadata, royalty)
+        //require(nftMetadata == Bytes(8).pad(''), ['Metadata cannot be empty'])
+       //allNFTs[this] = Address
     })
-    nftCreator.publish(nftMetadata, nftPrice)
-    //require(nftMetadata == Bytes(8).pad(''), ['Metadata cannot be empty'])
+    nftCreator.publish(nftMetadata, nftPrice, royalty)
+    
     const myNFT = {
         id: 1,
         metadata: nftMetadata,
         price: nftPrice,
         creator: nftCreator,
-        owner: nftCreator
+        owner: nftCreator,
+        royalty:royalty
     }
-    const allNFTs =  new Map(Address) 
-    //allNFTs[this] = myNFT
+    //const allNFTs =  new Map(Address, Address) 
+   // allNFTs[this] = Address
     commit()
-
     nftBuyer.only(() => {
         const id = declassify(interact.nftId) 
         interact.buyNft(id)
