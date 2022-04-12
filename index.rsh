@@ -10,12 +10,19 @@ export const main = Reach.App(() => {
         metadata:Bytes(64),
         price:UInt,
         royalty: UInt,
-        mintNft: Fun([Bytes(64), UInt], Null),
+        mintNft: Fun([Object({
+            id: UInt,
+            metadata: Bytes(64),
+            price: UInt,
+            creator: Address,
+            owner: Address,
+            royalty:UInt
+        })], Null)
     })
 
     const nftBuyer = Participant('buyer', {
         nftId:UInt,
-        buyNft: Fun([UInt], Null),
+        buyNft: Fun([Address, UInt, UInt], Null)
     })
 
     init() 
@@ -24,29 +31,35 @@ export const main = Reach.App(() => {
         const nftMetadata = declassify(interact.metadata)
         const nftPrice = declassify(interact.price)
         const royalty = declassify(interact.royalty)
-        //assert(nftMetadata != Bytes(12).pad(''))
-        interact.mintNft(nftMetadata, royalty)
-        //require(nftMetadata == Bytes(8).pad(''), ['Metadata cannot be empty'])
-       //allNFTs[this] = Address
+        const myNFT = {
+           id: 1,
+           metadata: nftMetadata,
+           price: nftPrice,
+           creator: nftCreator,
+           owner: nftCreator,
+           royalty:royalty
+        }
+        interact.mintNft(myNFT)
     })
-    nftCreator.publish(nftMetadata, nftPrice, royalty)
-    
-    const myNFT = {
-        id: 1,
-        metadata: nftMetadata,
-        price: nftPrice,
-        creator: nftCreator,
-        owner: nftCreator,
-        royalty:royalty
-    }
-    //const allNFTs =  new Map(Address, Address) 
-   // allNFTs[this] = Address
+    nftCreator.publish(myNFT)
     commit()
+
     nftBuyer.only(() => {
         const id = declassify(interact.nftId) 
-        interact.buyNft(id)
-    })    
-    nftBuyer.publish(id)
+    })
+    nftBuyer
+     .publish(id)
+     .pay(myNFT.price)
+     //assert(myNFT.price > 0)
+    transfer(myNFT.price).to(myNFT.owner)
+    //transfer(1000).to(myNFT.creator)
+    nftBuyer.interact.buyNft(nftBuyer, id, myNFT.price)
+    /*invariant(nftBuyer != nftCreator)
+    while (true) {
+        commit()
+       myNFT.owner = nftBuyer ;
+       continue
+    }*/
     commit()
 
 })
