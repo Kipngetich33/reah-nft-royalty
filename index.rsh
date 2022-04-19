@@ -22,7 +22,12 @@ export const main = Reach.App(() => {
 
     const nftBuyer = Participant('buyer', {
         nftId:UInt,
-        buyNft: Fun([Address, UInt, UInt], Null)
+        buyNft: Fun([Address, UInt, UInt], Null),
+        changeowner: Fun([Address], Null)
+    })
+
+    const NFT_API = API('NFT_API', {
+        changeOwner:Fun([], Address)
     })
 
     init() 
@@ -47,19 +52,29 @@ export const main = Reach.App(() => {
     nftBuyer.only(() => {
         const id = declassify(interact.nftId) 
     })
-    nftBuyer
-     .publish(id)
-     .pay(myNFT.price)
-     //assert(myNFT.price > 0)
-    transfer(myNFT.price).to(myNFT.owner)
-    //transfer(1000).to(myNFT.creator)
-    nftBuyer.interact.buyNft(nftBuyer, id, myNFT.price)
-    /*invariant(nftBuyer != nftCreator)
-    while (true) {
-        commit()
-       myNFT.owner = nftBuyer ;
-       continue
-    }*/
+
+    nftBuyer.publish(id).pay(myNFT.price) 
+    nftBuyer.interact.changeowner(myNFT.creator)
+    // It works till this line up 
+    const [owner] = parallelReduce([ myNFT.creator ])
+      .invariant(balance() == myNFT.price)
+      .while(true)
+      .api(
+        NFT_API.changeOwner, 
+          //((_) => { assume(this != myNFT.owner)})
+        //((_) => 0),
+        ((k) => {
+            //transfer(myNFT.price / myNFT.royalty).to(myNFT.creator)
+            //transfer(myNFT.price - myNFT.price/ myNFT.royalty).to(myNFT.owner)  
+            k(this)
+            return [nftBuyer]
+        })
+    );
+
+    nftBuyer.interact.changeowner(owner)
+    transfer(myNFT.price).to(nftCreator)
+    
+    //nftBuyer.interact.buyNft( ownerAddress, creatorAmount, ownerAmount)
     commit()
 
 })
