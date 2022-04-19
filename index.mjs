@@ -3,8 +3,11 @@ import { loadStdlib } from '@reach-sh/stdlib';
 
 const stdlib = loadStdlib()
 
-const creatorAccount = await stdlib.newTestAccount(stdlib.parseCurrency(2))
-const buyerAccount = await stdlib.newTestAccount(stdlib.parseCurrency(2))
+const creatorAccount = await stdlib.newTestAccount(stdlib.parseCurrency(20))
+const buyerAccount = await stdlib.newTestAccount(stdlib.parseCurrency(20))
+
+const beforeCreator = await stdlib.balanceOf(creatorAccount)
+const beforeBuyer = await stdlib.balanceOf(buyerAccount)
 
 const contractCreator = creatorAccount.contract(backend)
 const contractBuyer = buyerAccount.contract(backend, contractCreator.getInfo())
@@ -12,7 +15,7 @@ const contractBuyer = buyerAccount.contract(backend, contractCreator.getInfo())
 await Promise.all([
     contractCreator.participants.creator({
         metadata:'https://merkim.dev',
-        price: stdlib.parseCurrency(0.005),
+        price: stdlib.parseCurrency(5),
         royalty: 4,
         mintNft: (nft) => {
             for (let prop in nft) {
@@ -22,13 +25,21 @@ await Promise.all([
     }),
     contractBuyer.participants.buyer({
         nftId: 2,
-        changeowner:(owner) => console.log(owner),
-        //priceToPay: stdlib.parseCurrency(0.005),
+        changeowner:(lastOwner, newOwner) => {
+            console.log(`Owner went from ${lastOwner} to ${newOwner}`)
+        },
         buyNft:(owner, id, price) => {
-            const balance = stdlib.balanceOf(buyerAccount)
-            balance.then((data => {
-               console.log(`${owner} bought this id: ${id} for ${price} Algo. Now his balance is ${Number(data)}`)
-            }))
+            stdlib.balanceOf(buyerAccount).then(
+                data => {
+                    console.log(`${owner} bought this id: ${id} for ${stdlib.formatCurrency(price)} Algo. His balance went from ${stdlib.formatCurrency(Number(beforeBuyer))} to ${stdlib.formatCurrency(Number(data))}`)
+                }
+            )
+            stdlib.balanceOf(creatorAccount).then(
+                data => {
+                    console.log(`Creator balance went from ${stdlib.formatCurrency(Number(beforeCreator))} to ${stdlib.formatCurrency(Number(data))}`)
+                }
+            )
+           
         } 
     })
 ])

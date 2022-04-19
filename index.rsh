@@ -23,11 +23,7 @@ export const main = Reach.App(() => {
     const nftBuyer = Participant('buyer', {
         nftId:UInt,
         buyNft: Fun([Address, UInt, UInt], Null),
-        changeowner: Fun([Address], Null)
-    })
-
-    const NFT_API = API('NFT_API', {
-        changeOwner:Fun([], Address)
+        changeowner: Fun([Address, Address], Null)
     })
 
     init() 
@@ -47,34 +43,65 @@ export const main = Reach.App(() => {
         interact.mintNft(myNFT)
     })
     nftCreator.publish(myNFT)
+
     commit()
 
     nftBuyer.only(() => {
         const id = declassify(interact.nftId) 
     })
-
     nftBuyer.publish(id).pay(myNFT.price) 
-    nftBuyer.interact.changeowner(myNFT.creator)
-    // It works till this line up 
-    const [owner] = parallelReduce([ myNFT.creator ])
+    transfer(myNFT.price).to(myNFT.owner)
+    const modifiedNFT ={...myNFT,["owner"]:nftBuyer}
+
+    nftBuyer.interact.changeowner( myNFT.owner,modifiedNFT.owner)
+    nftBuyer.interact.buyNft(modifiedNFT.owner, modifiedNFT.id, modifiedNFT.price)
+    commit()
+    
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*const NFT_API = API('NFT_API', {
+        changeOwner:Fun([], Object({
+            id: UInt,
+            metadata: Bytes(64),
+            price: UInt,
+            creator: Address,
+            owner: Address,
+            royalty:UInt
+        }))
+    })*/
+
+/*const [owner] = parallelReduce([ myNFT ])
       .invariant(balance() == myNFT.price)
-      .while(true)
+      .while(false)
       .api(
         NFT_API.changeOwner, 
-          //((_) => { assume(this != myNFT.owner)})
-        //((_) => 0),
-        ((k) => {
+          //(() => { check(this != myNFT.owner), 'yoooh'}),
+          (() => 0),
+          ((k) => {
             //transfer(myNFT.price / myNFT.royalty).to(myNFT.creator)
             //transfer(myNFT.price - myNFT.price/ myNFT.royalty).to(myNFT.owner)  
-            k(this)
-            return [nftBuyer]
-        })
-    );
-
-    nftBuyer.interact.changeowner(owner)
-    transfer(myNFT.price).to(nftCreator)
-    
-    //nftBuyer.interact.buyNft( ownerAddress, creatorAmount, ownerAmount)
-    commit()
-
-})
+            const cc ={...myNFT,["owner"]:nftBuyer}
+            nftBuyer.interact.changeowner(cc)
+            k(cc)
+            return [cc]
+          })
+      );*/
