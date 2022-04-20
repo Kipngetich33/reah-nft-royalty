@@ -1,0 +1,68 @@
+.card {
+    position: relative;
+    background-color: rgb(237, 236, 236);
+    height: 12rem;
+    width: 8rem;
+    border-radius: 12px;
+    margin: 2rem;
+    overflow: hidden;
+    flex: none;
+    cursor: pointer;
+    border: 2px solid blue;
+}
+
+.card>img {
+    height: 80%;
+}
+
+.card>h2 {
+    font: bold;
+    margin: 0.5rem;
+}
+
+.card>.price {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 1rem;
+    font-size: x-small;
+}
+
+.card>button {
+    display: flex;
+    justify-content: center;
+    color: white;
+    width: 75%;
+    background-color: blue;
+    margin-left: 1rem;
+    border-radius: 9px;
+    font-size: bold;
+    border: 2px solid blue;
+}
+
+.card>.ownerAddress {
+    display: flex;
+    justify-content: center;
+    font-size: xx-small;
+    margin-top: 2rem;
+}
+
+.card>span {
+    position: absolute;
+    top: 1rem;
+    right: 3rem;
+    background-color: white;
+    height: 4rem;
+    width: 4.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid blue;
+    border-radius: 50%;
+}
+
+@media screen and (min-width:760px) {
+    .card {
+        height: 16rem;
+    }
+}

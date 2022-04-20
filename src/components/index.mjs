@@ -1,4 +1,4 @@
-import * as backend from './build/index.main.mjs';
+import * as backend from '../../build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 
 const stdlib = loadStdlib()
@@ -39,7 +39,26 @@ await Promise.all([
                     console.log(`Creator balance went from ${stdlib.formatCurrency(Number(beforeCreator))} to ${stdlib.formatCurrency(Number(data))}`)
                 }
             )
+        } 
+    }),
+
+    /*contractBuyer.participants.buyer({
+        nftId: 3,
+        changeowner:(lastOwner, newOwner) => {
+            console.log(`Owner went from ${lastOwner} to ${newOwner}`)
+        },
+        buyNft:(owner, id, price) => {
+            stdlib.balanceOf(buyerAccount).then(
+                data => {
+                    console.log(`${owner} bought this id: ${id} for ${stdlib.formatCurrency(price)} Algo. His balance went from ${stdlib.formatCurrency(Number(beforeBuyer))} to ${stdlib.formatCurrency(Number(data))}`)
+                }
+            )
+            stdlib.balanceOf(creatorAccount).then(
+                data => {
+                    console.log(`Creator balance went from ${stdlib.formatCurrency(Number(beforeCreator))} to ${stdlib.formatCurrency(Number(data))}`)
+                }
+            )
            
         } 
-    })
+    })*/
 ])
