@@ -1,23 +1,32 @@
 .card {
     position: relative;
     background-color: rgb(237, 236, 236);
-    height: 12rem;
-    width: 8rem;
+    height: 25rem;
+    width: 18rem;
     border-radius: 12px;
-    margin: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     overflow: hidden;
     flex: none;
     cursor: pointer;
     border: 2px solid blue;
+    padding-bottom: 0.5rem;
+}
+
+.card.largeCard {
+    height: 33rem;
+    width: 95%;
 }
 
 .card>img {
-    height: 80%;
+    height: 70%;
+    width: 100%;
 }
 
 .card>h2 {
     font: bold;
     margin: 0.5rem;
+    font-size: 15px;
 }
 
 .card>.price {
@@ -25,7 +34,7 @@
     display: flex;
     justify-content: flex-end;
     padding-right: 1rem;
-    font-size: x-small;
+    font-size: small;
 }
 
 .card>button {
@@ -34,35 +43,48 @@
     color: white;
     width: 75%;
     background-color: blue;
-    margin-left: 1rem;
+    margin-left: 12.5%;
     border-radius: 9px;
     font-size: bold;
     border: 2px solid blue;
+    height: 1.7rem;
+}
+
+.card>button:hover {
+    background-color: white;
+    border: 1px solid blue;
+    color: blue;
 }
 
 .card>.ownerAddress {
     display: flex;
     justify-content: center;
     font-size: xx-small;
-    margin-top: 2rem;
+    margin-bottom: 0.8rem;
 }
 
 .card>span {
     position: absolute;
-    top: 1rem;
-    right: 3rem;
-    background-color: white;
-    height: 4rem;
-    width: 4.5rem;
+    top: 0.2rem;
+    right: 0.3rem;
+    background-color: rgba(182, 162, 162, 0.6);
+    height: 2.5rem;
+    width: 2.7rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid blue;
+    border: 1px solid blue;
     border-radius: 50%;
 }
 
-@media screen and (min-width:760px) {
+@media screen and (mmax-width:760px) {
     .card {
-        height: 16rem;
+        height: 24rem;
+    }
+}
+
+@media screen and (mmax-width:760px) {
+    .card {
+        height: 24rem;
     }
 }

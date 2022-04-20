@@ -56,3 +56,27 @@
     color: white;
     cursor: pointer;
 }
+
+@media screen and (max-width:1200px) {
+    .mint>form>button {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width:850px) {
+    .mint>form {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width:660px) {
+    .mint>form {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width:425px) {
+    .mint>form {
+        width: 90%;
+    }
+}

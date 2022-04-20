@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Identicon from 'react-identicons';
 import '../styles/Card.css'
 
-function Card({selectNFt,img,price, owner,name,description, largeCard}) {
+function LargeCard({img,price, owner,name,description}) {
 
     const [load, setLoad] = useState(false)
 
@@ -18,21 +18,12 @@ function Card({selectNFt,img,price, owner,name,description, largeCard}) {
         window.location.reload()
     }
 
-    const getNFT = () => {
-        selectNFt({
-            img,
-            name,
-            owner,
-            description
-        })
-    }
-
     return (
-        <div className={`card ${largeCard && 'largeCard'}`} >
-            <img src={img} alt="" onMouseOver={getNFT}/>
+        <div className='card largeCard' >
+            <img src={img} alt=""/>
             <h2>{name}</h2>
             <p className="price">{price} ALGO</p>
-            {largeCard && <p>{description}</p>}
+            <p>{description}</p>
             <button onClick={buyNFT} disabled={load}>{!load?'Buy':'Loading...'}</button>
             <p className="ownerAddress"><span>Owner:{owner}</span></p>
             <span><Identicon string={owner} size={20}/></span>
@@ -40,4 +31,4 @@ function Card({selectNFt,img,price, owner,name,description, largeCard}) {
     )
 }
 
-export default Card
+export default LargeCard
