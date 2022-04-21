@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Web3Storage } from 'web3.storage'
 import {ethers} from 'ethers'
 import Web3Modal from 'web3modal'
+import { useNavigate } from 'react-router-dom'
 import * as backend from '../../build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 
@@ -16,6 +17,7 @@ function Mint() {
   const [royalty, setRoyalty] = useState(0)
   const [thumbnail, setThumbnail] = useState('')
   const [load, setLoad] = useState(false)
+  const navigate = useNavigate()
 
   const stdlib = loadStdlib()
   const interact = {...stdlib.hasRandom}
@@ -60,7 +62,8 @@ function Mint() {
       interact.metadata = nftCID
       interact.price = price 
       interact.royalty = royalty
-      setLoad(false)
+      navigate('/')
+      
 
     } catch(e) {
       setLoad(false)

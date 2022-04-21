@@ -8,8 +8,7 @@
     margin-bottom: 1rem;
     overflow: hidden;
     flex: none;
-    cursor: pointer;
-    border: 2px solid blue;
+    border: 2px solid rgb(221, 249, 249);
     padding-bottom: 0.5rem;
 }
 
@@ -40,20 +39,21 @@
 .card>button {
     display: flex;
     justify-content: center;
-    color: white;
+    align-items: center;
+    color:black;
     width: 75%;
-    background-color: blue;
+    background-color: rgb(110, 214, 214);
     margin-left: 12.5%;
     border-radius: 9px;
     font-size: bold;
-    border: 2px solid blue;
-    height: 1.7rem;
+    border: 2px solid rgb(221, 249, 249);
+    height: 1.9rem;
+    cursor: pointer;
 }
 
 .card>button:hover {
     background-color: white;
-    border: 1px solid blue;
-    color: blue;
+    border: 1px solid rgb(110, 214, 214);
 }
 
 .card>.ownerAddress {
@@ -73,7 +73,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid blue;
     border-radius: 50%;
 }
 

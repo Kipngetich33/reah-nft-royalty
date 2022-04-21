@@ -6,24 +6,25 @@
 
 export const main = Reach.App(() => {
 
+    const NFT = Object({
+        id:UInt,
+        metadata:Bytes(32),
+        price:UInt,
+        creator:Address,
+        owner:Address,
+        royalty:UInt
+    })
+
     const nftCreator = Participant('creator', {
-        metadata:Bytes(64),
+        metadata:Bytes(32),
         price:UInt,
         royalty: UInt,
-        mintNft: Fun([Object({
-            id: UInt,
-            metadata: Bytes(64),
-            price: UInt,
-            creator: Address,
-            owner: Address,
-            royalty:UInt
-        })], Null)
+        mintNft: Fun([NFT], Null)
     })
 
     const nftBuyer = Participant('buyer', {
-        nftId:UInt,
-        buyNft: Fun([Address, UInt, UInt], Null),
-        changeowner: Fun([Address, Address], Null)
+        nft: NFT,
+        buyNft: Fun([NFT], Null),
     })
 
     init() 
@@ -40,68 +41,23 @@ export const main = Reach.App(() => {
            owner: nftCreator,
            royalty:royalty
         }
-        interact.mintNft(myNFT)
     })
     nftCreator.publish(myNFT)
+    nftCreator.interact.mintNft(myNFT)
 
     commit()
 
     nftBuyer.only(() => {
-        const id = declassify(interact.nftId) 
+        const nftToBuy = declassify(interact.nft) 
+        //const fPrice = nftToBuy/2 
+        //const sPrice = nftToBuy/2 
     })
-    nftBuyer.publish(id).pay(myNFT.price) 
-    transfer(myNFT.price).to(myNFT.owner)
-    const modifiedNFT ={...myNFT,["owner"]:nftBuyer}
+    nftBuyer.publish(nftToBuy, sPrice).pay(nftToBuy.price) 
+    //transfer(fPrice).to(nftToBuy.owner)  
+    transfer(sPrice).to(nftToBuy.creator)  
+    const thisNFT= {...nftToBuy, ["owner"]:nftBuyer}
+    nftBuyer.interact.buyNft(thisNFT)
 
-    nftBuyer.interact.changeowner( myNFT.owner,modifiedNFT.owner)
-    nftBuyer.interact.buyNft(modifiedNFT.owner, modifiedNFT.id, modifiedNFT.price)
     commit()
     
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*const NFT_API = API('NFT_API', {
-        changeOwner:Fun([], Object({
-            id: UInt,
-            metadata: Bytes(64),
-            price: UInt,
-            creator: Address,
-            owner: Address,
-            royalty:UInt
-        }))
-    })*/
-
-/*const [owner] = parallelReduce([ myNFT ])
-      .invariant(balance() == myNFT.price)
-      .while(false)
-      .api(
-        NFT_API.changeOwner, 
-          //(() => { check(this != myNFT.owner), 'yoooh'}),
-          (() => 0),
-          ((k) => {
-            //transfer(myNFT.price / myNFT.royalty).to(myNFT.creator)
-            //transfer(myNFT.price - myNFT.price/ myNFT.royalty).to(myNFT.owner)  
-            const cc ={...myNFT,["owner"]:nftBuyer}
-            nftBuyer.interact.changeowner(cc)
-            k(cc)
-            return [cc]
-          })
-      );*/

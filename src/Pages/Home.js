@@ -21,11 +21,12 @@ function Home() {
           <button>Connect wallet</button>
           <img src="" alt="" />
         </section>
+        <a href="/mint">+</a>
       </nav>
       <div className='board'>
         <div className='board__left'>
-          <Card selectNFt={setSelectedNFT} img={'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg'} price={0.05} owner={'0xhbbbq9726585316938679464576q48041769'} name ={'The homogeneous background'} description={'Hello prople I wanted to have lorem ipsum here '}/>
-          <Card selectNFt={setSelectedNFT} img={'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg'} price={0.05} owner={'0xhbbbq9726585316938679464576q48041769'} name ={'The homogeneous background'} description={'Hello prople I wanted to have lorem ipsum here '}/>
+          <Card selectNFt={setSelectedNFT} img={'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg'} price={0.0005} owner={'0xhbbbq9726585316938679464576q48041769'} name ={'The homogeneous background'} description={'Hello prople I wanted to have lorem ipsum here '}/>
+          <Card selectNFt={setSelectedNFT} img={'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg'} price={0.25} owner={'0xhbbbq9726585316938679464576q48041769'} name ={'The homogeneous background'} description={'Hello prople I wanted to have lorem ipsum here '}/>
           <Card selectNFt={setSelectedNFT} img={'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg'} price={0.05} owner={'0xhbbbq9726585316938679464576q48041769'} name ={'The homogeneous background'} description={'Hello prople I wanted to have lorem ipsum here '}/>
         </div>
         <div className='board__right'>

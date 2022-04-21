@@ -23,7 +23,8 @@ function Card({selectNFt,img,price, owner,name,description, largeCard}) {
             img,
             name,
             owner,
-            description
+            description,
+            price
         })
     }
 
