@@ -52,7 +52,6 @@ export const main = Reach.App(() => {
     transfer(nftToBuy.price).to(nftToBuy.owner)  
     const modifiedNFT= {...nftToBuy, ["owner"]:nftBuyer}
     nftBuyer.interact.buyNft(modifiedNFT)
-
     commit()
     
 })

@@ -4,12 +4,8 @@ import Identicon from 'react-identicons';
 import Card from '../components/Card'
 import LargeCard from '../components/LargeCard'
 import '../styles/home.css'
-import * as backend from '../../build/index.main.mjs';
-import { loadStdlib } from '@reach-sh/stdlib';
 
 function Home() {
-
-  const reach = loadStdlib(process.env)
 
   const [selectedNFT, setSelectedNFT] = useState({
     img: 'https://publish.one37pm.net/wp-content/uploads/2021/02/how-to-buy-a-cryptopunk_0001_03.jpg?fit=750%2C500',

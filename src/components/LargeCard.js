@@ -1,6 +1,3 @@
-import Web3Modal from 'web3modal'
-import {ethers} from 'ethers'
-import { useState } from 'react'
 import Identicon from 'react-identicons';
 import '../styles/card.css'
 
