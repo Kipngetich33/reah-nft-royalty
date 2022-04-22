@@ -7,7 +7,6 @@
 export const main = Reach.App(() => {
 
     const NFT = Object({
-        id:UInt,
         metadata:Bytes(32),
         price:UInt,
         creator:Address,
@@ -34,7 +33,6 @@ export const main = Reach.App(() => {
         const nftPrice = declassify(interact.price)
         const royalty = declassify(interact.royalty)
         const myNFT = {
-           id: 1,
            metadata: nftMetadata,
            price: nftPrice,
            creator: nftCreator,
@@ -49,14 +47,11 @@ export const main = Reach.App(() => {
 
     nftBuyer.only(() => {
         const nftToBuy = declassify(interact.nft) 
-        //const fPrice = nftToBuy/2 
-        //const sPrice = nftToBuy/2 
     })
-    nftBuyer.publish(nftToBuy, sPrice).pay(nftToBuy.price) 
-    //transfer(fPrice).to(nftToBuy.owner)  
-    transfer(sPrice).to(nftToBuy.creator)  
-    const thisNFT= {...nftToBuy, ["owner"]:nftBuyer}
-    nftBuyer.interact.buyNft(thisNFT)
+    nftBuyer.publish(nftToBuy).pay(nftToBuy.price) 
+    transfer(nftToBuy.price).to(nftToBuy.owner)  
+    const modifiedNFT= {...nftToBuy, ["owner"]:nftBuyer}
+    nftBuyer.interact.buyNft(modifiedNFT)
 
     commit()
     

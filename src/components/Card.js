@@ -1,8 +1,6 @@
-import Web3Modal from 'web3modal'
-import {ethers} from 'ethers'
 import { useState } from 'react'
 import Identicon from 'react-identicons';
-import '../styles/Card.css'
+import '../styles/card.css'
 
 function Card({selectNFt,img,price, owner,name,description, largeCard}) {
 
@@ -10,11 +8,6 @@ function Card({selectNFt,img,price, owner,name,description, largeCard}) {
 
     const buyNFT = async() => {
         setLoad(true)
-        const web3modal = new Web3Modal()
-        const connection = await web3modal.connect()
-        const provider = new ethers.providers.Web3Provider(connection)
-        const signer = provider.getSigner()
-        //Add something here 
         window.location.reload()
     }
 

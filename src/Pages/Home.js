@@ -1,9 +1,15 @@
 import React, { useState } from 'react'
+import MyAlgoConnect from '@randlabs/myalgo-connect';
+import Identicon from 'react-identicons';
 import Card from '../components/Card'
 import LargeCard from '../components/LargeCard'
 import '../styles/home.css'
+import * as backend from '../../build/index.main.mjs';
+import { loadStdlib } from '@reach-sh/stdlib';
 
 function Home() {
+
+  const reach = loadStdlib(process.env)
 
   const [selectedNFT, setSelectedNFT] = useState({
     img: 'https://publish.one37pm.net/wp-content/uploads/2021/02/how-to-buy-a-cryptopunk_0001_03.jpg?fit=750%2C500',
@@ -12,14 +18,21 @@ function Home() {
     description:'lorem ipusm dissile dolorem portura nartro reveress',
     price:0.05
   })
+  const [address, setAddress] = useState('')
+
+  const connectWallet = async() => {
+    const myAlgoConnect = new MyAlgoConnect();
+    const accountsSharedByUser = await myAlgoConnect.connect();
+    setAddress(accountsSharedByUser[0].address)
+  }
 
   return (
     <div className='home'>
       <nav>
         <h1>TREE</h1>
         <section>
-          <button>Connect wallet</button>
-          <img src="" alt="" />
+          {!address && <button onClick={connectWallet}>Connect wallet</button>}
+          {address && <Identicon string={address} size={20}/>}
         </section>
         <a href="/mint">+</a>
       </nav>

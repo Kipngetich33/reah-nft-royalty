@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import '../styles/mint.css'
 import { useState } from 'react'
 import { Web3Storage } from 'web3.storage'
-import {ethers} from 'ethers'
-import Web3Modal from 'web3modal'
 import { useNavigate } from 'react-router-dom'
 import * as backend from '../../build/index.main.mjs';
-import { loadStdlib } from '@reach-sh/stdlib';
+import { loadStdlib, ALGO_MyAlgoConnect as MyAlgoConnect } from '@reach-sh/stdlib';
 
 function Mint() {  
+
+  const reach = loadStdlib(process.env);
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -19,9 +19,6 @@ function Mint() {
   const [load, setLoad] = useState(false)
   const navigate = useNavigate()
 
-  const stdlib = loadStdlib()
-  const interact = {...stdlib.hasRandom}
-
   const uploadImage = (e) => {
     e.preventDefault()
     const url = URL.createObjectURL(e.target.files[0])
@@ -31,19 +28,11 @@ function Mint() {
     
   const submitData = async(e) => {
     e.preventDefault()
-    
-
     if(!name || !description || !price || !royalty || img.length == 0) {
       console.log('Not enough data')
       return
     }
     setLoad(true)
-    /*const web3modal = new Web3Modal()
-    const connection = await web3modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const signer = provider.getSigner()*/ 
-
-    //I'm doing this for demo purpose only
     try{
       const storageKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDQ4M0U1RGEwRGJhODE1YWYyOTk5NDU4QjI0QjkwRGFGYzEwNzZCMEQiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTA0MTY3ODg3OTksIm5hbWUiOiJuZnQtd2l0aC1yb3lhbHR5In0.R-K1cAJgVvU63YID7lekYrJQ0wx0tlgeOMkmWNb-t0w'
       const client = new Web3Storage({ token: storageKey })
@@ -59,10 +48,10 @@ function Mint() {
       ) 
       const nftCID = await client.put([new File([nftData],'metadata' )])
   
-      interact.metadata = nftCID
-      interact.price = price 
-      interact.royalty = royalty
-      navigate('/')
+      //interact.metadata = nftCID
+      //interact.price = price 
+      //interact.royalty = royalty
+      //navigate('/')
       
 
     } catch(e) {
@@ -70,6 +59,24 @@ function Mint() {
     }
 
   }
+
+  /*useEffect(() => {
+    const getFundedAccount = async() => {
+      const acc = await reach.getDefaultAccount();
+      const balAtomic = await reach.balanceOf(acc);
+      const bal = reach.formatCurrency(balAtomic, 4);
+      //await reach.fundFromFaucet(acc, reach.parseCurrency(10));
+      console.log(bal)
+
+      /*reach.setWalletFallback(reach.walletFallback({
+        providerEnv: "TestNet", WalletConnect
+      }))
+
+    }
+
+    getFundedAccount()
+    
+  }, [])*/
 
   return (
     <div className='mint'>
