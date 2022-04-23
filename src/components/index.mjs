@@ -6,20 +6,20 @@ const stdlib = loadStdlib()
 const creatorAccount = await stdlib.newTestAccount(stdlib.parseCurrency(20))
 const buyerAccount = await stdlib.newTestAccount(stdlib.parseCurrency(20))
 
-const beforeCreator = await stdlib.balanceOf(creatorAccount)
-const beforeBuyer = await stdlib.balanceOf(buyerAccount)
+//const beforeCreator = await stdlib.balanceOf(creatorAccount)
+//const beforeBuyer = await stdlib.balanceOf(buyerAccount)
 
 const contractCreator = creatorAccount.contract(backend)
 const contractBuyer = buyerAccount.contract(backend, contractCreator.getInfo())
 
-let arr = []
+//let arr = []
 
 await Promise.all([
     contractCreator.participants.creator({
         metadata:'https://merkim.dev',
         price: stdlib.parseCurrency(5),
         royalty: 4,
-        mintNft: async(nft) => {
+        mintNft: (nft) => {
             console.log(nft)
         } 
     }),
@@ -32,12 +32,8 @@ await Promise.all([
             price: 5000000,
             royalty:4
         },
-        buyNft:async(nft) => {
-            const balanceNow = await stdlib.balanceOf(buyerAccount)
-            console.log(`Buyer account went from ${stdlib.formatCurrency(Number(beforeBuyer))} to ${stdlib.formatCurrency(Number(balanceNow))} `)
+        buyNft: (nft) => {
+            console.log(nft)
         } 
     }),
-
-    //const afterCreator = await stdlib.balanceOf(creatorAccount);
-    //const afterBuyer = await stdlib.balanceOf(buyerAccount);
 ])

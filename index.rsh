@@ -7,7 +7,7 @@
 export const main = Reach.App(() => {
 
     const NFT = Object({
-        metadata:Bytes(32),
+        metadata:Bytes(59),
         price:UInt,
         creator:Address,
         owner:Address,
@@ -15,7 +15,7 @@ export const main = Reach.App(() => {
     })
 
     const nftCreator = Participant('creator', {
-        metadata:Bytes(32),
+        metadata:Bytes(59),
         price:UInt,
         royalty: UInt,
         mintNft: Fun([NFT], Null)
@@ -42,7 +42,6 @@ export const main = Reach.App(() => {
     })
     nftCreator.publish(myNFT)
     nftCreator.interact.mintNft(myNFT)
-
     commit()
 
     nftBuyer.only(() => {
@@ -50,8 +49,8 @@ export const main = Reach.App(() => {
     })
     nftBuyer.publish(nftToBuy).pay(nftToBuy.price) 
     transfer(nftToBuy.price).to(nftToBuy.owner)  
-    const modifiedNFT= {...nftToBuy, ["owner"]:nftBuyer}
-    nftBuyer.interact.buyNft(modifiedNFT)
+    //const modifiedNFT= {...nftToBuy, ["owner"]:nftBuyer}
+    nftBuyer.interact.buyNft(nftToBuy)
     commit()
     
 })

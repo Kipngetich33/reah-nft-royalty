@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import MyAlgoConnect from '@randlabs/myalgo-connect';
 import Identicon from 'react-identicons';
 import Card from '../components/Card'
 import LargeCard from '../components/LargeCard'
+import { collection, getDocs } from "firebase/firestore"
+import { db } from '../storage'
 import '../styles/home.css'
 
 function Home() {
@@ -14,6 +16,8 @@ function Home() {
     description:'lorem ipusm dissile dolorem portura nartro reveress',
     price:0.05
   })
+
+  const [nfts, setNfts] = useState([])
   const [address, setAddress] = useState('')
 
   const connectWallet = async() => {
@@ -21,6 +25,21 @@ function Home() {
     const accountsSharedByUser = await myAlgoConnect.connect();
     setAddress(accountsSharedByUser[0].address)
   }
+
+  useEffect(() => {
+    const getData = async() => {
+      const querySnapshot = await getDocs(collection(db, "nfts"))
+      let result = []
+      querySnapshot.forEach((doc) => {
+        const {id }= doc
+        const data = doc.data()
+        result.push({id, data})
+      })
+      setNfts(result)
+    }
+
+    getData()
+  }, [])
 
   return (
     <div className='home'>
@@ -34,9 +53,7 @@ function Home() {
       </nav>
       <div className='board'>
         <div className='board__left'>
-          <Card selectNFt={setSelectedNFT} img={'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg'} price={0.0005} owner={'0xhbbbq9726585316938679464576q48041769'} name ={'The homogeneous background'} description={'Hello prople I wanted to have lorem ipsum here '}/>
-          <Card selectNFt={setSelectedNFT} img={'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg'} price={0.25} owner={'0xhbbbq9726585316938679464576q48041769'} name ={'The homogeneous background'} description={'Hello prople I wanted to have lorem ipsum here '}/>
-          <Card selectNFt={setSelectedNFT} img={'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg'} price={0.05} owner={'0xhbbbq9726585316938679464576q48041769'} name ={'The homogeneous background'} description={'Hello prople I wanted to have lorem ipsum here '}/>
+          {nfts?.map(({id, data}) => <Card key={id} id={id} creator={data.creator} owner={data.owner} price={data.price} royalty={data.royalty} metadata={data.metadata}  selectNFt={setSelectedNFT} />)}
         </div>
         <div className='board__right'>
         <LargeCard img={selectedNFT.img} owner={selectedNFT.owner} price={selectedNFT.price} name ={selectedNFT.name} description={selectedNFT.description} />
