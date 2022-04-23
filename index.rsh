@@ -42,15 +42,20 @@ export const main = Reach.App(() => {
     })
     nftCreator.publish(myNFT)
     nftCreator.interact.mintNft(myNFT)
+    
     commit()
 
     nftBuyer.only(() => {
         const nftToBuy = declassify(interact.nft) 
+        const royaltyPercent = nftToBuy.royalty
     })
-    nftBuyer.publish(nftToBuy).pay(nftToBuy.price) 
-    transfer(nftToBuy.price).to(nftToBuy.owner)  
-    //const modifiedNFT= {...nftToBuy, ["owner"]:nftBuyer}
-    nftBuyer.interact.buyNft(nftToBuy)
+    nftBuyer.publish(nftToBuy, royaltyPercent).pay(nftToBuy.price) 
+    const p1 = nftToBuy.price/nftToBuy.royalty 
+    const p2 = nftToBuy.price - nftToBuy.price/nftToBuy.royalty 
+    transfer(p1).to(nftToBuy.creator)  
+    transfer(p2).to(nftToBuy.owner)
+    const modifiedNFT= {...nftToBuy, ["owner"]:nftBuyer}
+    nftBuyer.interact.buyNft(modifiedNFT)
     commit()
     
 })

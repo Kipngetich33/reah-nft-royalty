@@ -1,4 +1,4 @@
-import * as backend from '../../build/index.main.mjs';
+import * as backend from '../build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 
 const stdlib = loadStdlib()
@@ -6,13 +6,9 @@ const stdlib = loadStdlib()
 const creatorAccount = await stdlib.newTestAccount(stdlib.parseCurrency(20))
 const buyerAccount = await stdlib.newTestAccount(stdlib.parseCurrency(20))
 
-//const beforeCreator = await stdlib.balanceOf(creatorAccount)
-//const beforeBuyer = await stdlib.balanceOf(buyerAccount)
-
 const contractCreator = creatorAccount.contract(backend)
-const contractBuyer = buyerAccount.contract(backend, contractCreator.getInfo())
+const contractBuyer = buyerAccount.contract(backend ,contractCreator.getInfo())
 
-//let arr = []
 
 await Promise.all([
     contractCreator.participants.creator({

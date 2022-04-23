@@ -58,7 +58,7 @@ function Mint() {
       //const [{address}] = await myAlgoConnect.connect();
       //const bal = await reach.balanceOf(acc.address)
       const ctc = address.contract(backend)
-      //const ccc = await ctc.getContractAddress()
+      //const ccc = await ctc.getInfo() //await ctc.getContractAddress()
       //const ctcInfoSt = JSON.stringify(await ctc.getInfo(), null, 2);
       //console.log(ccc)
       backend.creator(ctc, {
