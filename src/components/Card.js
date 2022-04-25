@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react'
 import * as backend from '../../build/index.main.mjs'
-import { loadStdlib } from '@reach-sh/stdlib'
+import { loadStdlib, ALGO_MyAlgoConnect as MyAlgoConnect } from '@reach-sh/stdlib'
 import Identicon from 'react-identicons';
 import { Web3Storage } from 'web3.storage'
 import axios from 'axios'
-//import MyAlgoConnect from '@randlabs/myalgo-connect'
+import { doc, updateDoc } from 'firebase/firestore'
 import { ctcInfoStr } from '../utils'
 import '../styles/card.css'
 
 function Card({selectNFt, id, creator, metadata, price, owner, royalty}) {
 
     const reach = loadStdlib({REACH_CONNECTOR_MODE: 'ALGO'})
+    reach.setWalletFallback(reach.walletFallback({
+        providerEnv: 'TestNet', MyAlgoConnect 
+    }))
+
     const [nftMetadata, setMetadata] = useState()
-    //const myAlgoConnect = new MyAlgoConnect()
+    const [load, setLoad] = useState(false)
+
 
     const storageKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDQ4M0U1RGEwRGJhODE1YWYyOTk5NDU4QjI0QjkwRGFGYzEwNzZCMEQiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTA0MTY3ODg3OTksIm5hbWUiOiJuZnQtd2l0aC1yb3lhbHR5In0.R-K1cAJgVvU63YID7lekYrJQ0wx0tlgeOMkmWNb-t0w'
     const client = new Web3Storage({ token: storageKey })
@@ -29,14 +34,11 @@ function Card({selectNFt, id, creator, metadata, price, owner, royalty}) {
         getMetadata()
     },[])
 
-    const [load, setLoad] = useState(false)
-
+    
     const buyNFT = async() => {
-        //const [acc] = await myAlgoConnect.connect();
-        const address = await reach.newTestAccount(reach.parseCurrency(20))
+        const account = await reach.getDefaultAccount()
         setLoad(true)
-        const ctc = address.contract(backend /*, JSON.parse(ctcInfoStr)*/);
-        //console.log(ctc)
+        const ctc = account.contract(backend, ctcInfoStr);
         backend.buyer(ctc, {
             nft : {
                 creator,
@@ -45,8 +47,12 @@ function Card({selectNFt, id, creator, metadata, price, owner, royalty}) {
                 price: reach.parseCurrency(price),
                 royalty
             },
-            buyNft:(nft) => {
+            id,
+            buyNft:async(nft, id) => {
                 console.log(nft)
+                console.log(`Here is the id:${id}`)
+                const nftRef = doc(db, "nfts", id)
+                await updateDoc(nftRef, nft)
             }
         })
     

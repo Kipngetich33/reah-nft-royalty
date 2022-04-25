@@ -1,19 +1,20 @@
-import React, { useEffect } from 'react'
-import '../styles/mint.css'
-import { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Web3Storage } from 'web3.storage'
 import { useNavigate } from 'react-router-dom'
 import * as backend from '../../build/index.main.mjs'
-import { loadStdlib } from '@reach-sh/stdlib'
+import { loadStdlib, ALGO_MyAlgoConnect as MyAlgoConnect } from '@reach-sh/stdlib'
 import { collection, addDoc} from 'firebase/firestore'
 import { db }from '../storage'
-//import MyAlgoConnect from '@randlabs/myalgo-connect'
 import { ctcInfoStr } from '../utils'
+import '../styles/mint.css'
 
 
 function Mint() {  
 
   const reach = loadStdlib({REACH_CONNECTOR_MODE: 'ALGO'});
+  reach.setWalletFallback(reach.walletFallback({
+    providerEnv: 'TestNet', MyAlgoConnect 
+  }))
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -22,6 +23,7 @@ function Mint() {
   const [royalty, setRoyalty] = useState(0)
   const [thumbnail, setThumbnail] = useState('')
   const [load, setLoad] = useState(false)
+  const [Account,setAccount] = useState()
   const navigate = useNavigate()
 
   const uploadImage = (e) => {
@@ -33,15 +35,14 @@ function Mint() {
     
   const submitData = async(e) => {
     e.preventDefault()
-    //const myAlgoConnect = new MyAlgoConnect()
-  
-    if(!name || !description || !price || !royalty || img.length == 0) {
+
+    /*if(!name || !description || !price || !royalty || img.length == 0) {
       console.log('Not enough data')
       return
-    }
+    }*/
     setLoad(true)
     try{
-      const storageKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDQ4M0U1RGEwRGJhODE1YWYyOTk5NDU4QjI0QjkwRGFGYzEwNzZCMEQiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTA0MTY3ODg3OTksIm5hbWUiOiJuZnQtd2l0aC1yb3lhbHR5In0.R-K1cAJgVvU63YID7lekYrJQ0wx0tlgeOMkmWNb-t0w'
+      /*const storageKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDQ4M0U1RGEwRGJhODE1YWYyOTk5NDU4QjI0QjkwRGFGYzEwNzZCMEQiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTA0MTY3ODg3OTksIm5hbWUiOiJuZnQtd2l0aC1yb3lhbHR5In0.R-K1cAJgVvU63YID7lekYrJQ0wx0tlgeOMkmWNb-t0w'
       const client = new Web3Storage({ token: storageKey })
 
       const imgCID = await client.put([new File([new Blob([img[0]])], `${name}`)])
@@ -53,15 +54,12 @@ function Mint() {
           imgLink,
           })], { type:'application/json' }
       ) 
-      const nftCID = await client.put([new File([nftData],'metadata' )])
-      const address = await reach.newTestAccount(reach.parseCurrency(20))
-      //const [{address}] = await myAlgoConnect.connect();
-      //const bal = await reach.balanceOf(acc.address)
-      const ctc = address.contract(backend)
-      //const ccc = await ctc.getInfo() //await ctc.getContractAddress()
-      //const ctcInfoSt = JSON.stringify(await ctc.getInfo(), null, 2);
-      //console.log(ccc)
-      backend.creator(ctc, {
+      const nftCID = await client.put([new File([nftData],'metadata' )])*/
+      const account = await reach.getDefaultAccount()
+      const ctc = account.contract(backend)
+      const ctcInfoSt = JSON.stringify(await Account.getInfo(), null, 2);
+      console.log(ctcInfoSt)
+      /*backend.creator(ctc, {
         metadata : nftCID,
         price : price,
         royalty : royalty,
@@ -70,9 +68,9 @@ function Mint() {
           nft.royalty = Number(nft.royalty)
           await addDoc(collection(db, "nfts"), nft)
         }
-      })
+      })*/
       
-      navigate('/')
+      //navigate('/')
   
     } catch(e) {
       setLoad(false)
