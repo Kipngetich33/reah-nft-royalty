@@ -6,6 +6,7 @@ import { Web3Storage } from 'web3.storage'
 import axios from 'axios'
 import { doc, updateDoc } from 'firebase/firestore'
 import { ctcInfoStr } from '../utils'
+import { db } from '../storage';
 import '../styles/card.css'
 
 function Card({selectNFt, id, creator, metadata, price, owner, royalty}) {
@@ -38,7 +39,7 @@ function Card({selectNFt, id, creator, metadata, price, owner, royalty}) {
     const buyNFT = async() => {
         const account = await reach.getDefaultAccount()
         setLoad(true)
-        const ctc = account.contract(backend, ctcInfoStr);
+        const ctc = account.contract(backend, ctcInfoStr)
         backend.buyer(ctc, {
             nft : {
                 creator,
@@ -53,10 +54,9 @@ function Card({selectNFt, id, creator, metadata, price, owner, royalty}) {
                 console.log(`Here is the id:${id}`)
                 const nftRef = doc(db, "nfts", id)
                 await updateDoc(nftRef, nft)
+                window.location.reload()
             }
         })
-    
-        //window.location.reload()
     }
 
     const getNFT = () => {

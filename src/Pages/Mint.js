@@ -11,7 +11,7 @@ import '../styles/mint.css'
 
 function Mint() {  
 
-  const reach = loadStdlib({REACH_CONNECTOR_MODE: 'ALGO'});
+  const reach = loadStdlib(process.env);
   reach.setWalletFallback(reach.walletFallback({
     providerEnv: 'TestNet', MyAlgoConnect 
   }))
@@ -23,7 +23,6 @@ function Mint() {
   const [royalty, setRoyalty] = useState(0)
   const [thumbnail, setThumbnail] = useState('')
   const [load, setLoad] = useState(false)
-  const [Account,setAccount] = useState()
   const navigate = useNavigate()
 
   const uploadImage = (e) => {
@@ -36,13 +35,13 @@ function Mint() {
   const submitData = async(e) => {
     e.preventDefault()
 
-    /*if(!name || !description || !price || !royalty || img.length == 0) {
+    if(!name || !description || !price || !royalty || img.length == 0) {
       console.log('Not enough data')
       return
-    }*/
+    }
     setLoad(true)
     try{
-      /*const storageKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDQ4M0U1RGEwRGJhODE1YWYyOTk5NDU4QjI0QjkwRGFGYzEwNzZCMEQiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTA0MTY3ODg3OTksIm5hbWUiOiJuZnQtd2l0aC1yb3lhbHR5In0.R-K1cAJgVvU63YID7lekYrJQ0wx0tlgeOMkmWNb-t0w'
+      const storageKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDQ4M0U1RGEwRGJhODE1YWYyOTk5NDU4QjI0QjkwRGFGYzEwNzZCMEQiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTA0MTY3ODg3OTksIm5hbWUiOiJuZnQtd2l0aC1yb3lhbHR5In0.R-K1cAJgVvU63YID7lekYrJQ0wx0tlgeOMkmWNb-t0w'
       const client = new Web3Storage({ token: storageKey })
 
       const imgCID = await client.put([new File([new Blob([img[0]])], `${name}`)])
@@ -54,12 +53,11 @@ function Mint() {
           imgLink,
           })], { type:'application/json' }
       ) 
-      const nftCID = await client.put([new File([nftData],'metadata' )])*/
+      const nftCID = await client.put([new File([nftData],'metadata' )])
       const account = await reach.getDefaultAccount()
-      const ctc = account.contract(backend)
-      const ctcInfoSt = JSON.stringify(await Account.getInfo(), null, 2);
-      console.log(ctcInfoSt)
-      /*backend.creator(ctc, {
+      const ctc = account.contract(backend, ctcInfoStr)
+      
+      backend.creator(ctc, {
         metadata : nftCID,
         price : price,
         royalty : royalty,
@@ -68,10 +66,12 @@ function Mint() {
           nft.royalty = Number(nft.royalty)
           await addDoc(collection(db, "nfts"), nft)
         }
-      })*/
+      })
+      //const ctcInfoSt = await ctc.getInfo()
+      //console.log(Number(ctcInfoSt))
       
       //navigate('/')
-  
+      setLoad(false)
     } catch(e) {
       setLoad(false)
       console.log(e)

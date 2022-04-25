@@ -1,1 +1,1 @@
-export const ctcInfoStr = ''
+export const ctcInfoStr = 85875242
