@@ -9,5 +9,5 @@ Here is how it works:
 ## To get started, do the following 
 - clone the project 
 - Run *npm install* to install all the dependecies 
-- Read [here]() for documentation about how to set up a reach project 
+- Read [here](https://docs.reach.sh/tut/rps/#tut) for documentation about how to set up a reach project 
 - Run *./reach react* to start the app  
