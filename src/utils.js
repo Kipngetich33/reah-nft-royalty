@@ -1,1 +1,1 @@
-export const ctcInfoStr = 85875242
+export const ctcInfoStr = 714821900   //points to algo mainnet

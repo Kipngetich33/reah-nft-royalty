@@ -11,9 +11,9 @@ import '../styles/card.css'
 
 function Card({selectNFt, id, creator, metadata, price, owner, royalty}) {
 
-    const reach = loadStdlib({REACH_CONNECTOR_MODE: 'ALGO'})
+    const reach = loadStdlib(process.env)
     reach.setWalletFallback(reach.walletFallback({
-        providerEnv: 'TestNet', MyAlgoConnect 
+        providerEnv: 'MainNet', MyAlgoConnect 
     }))
 
     const [nftMetadata, setMetadata] = useState()
@@ -50,8 +50,8 @@ function Card({selectNFt, id, creator, metadata, price, owner, royalty}) {
             },
             id,
             buyNft:async(nft, id) => {
-                console.log(nft)
-                console.log(`Here is the id:${id}`)
+                nft.price = Number(nft.price)
+                nft.royalty = Number(nft.royalty)
                 const nftRef = doc(db, "nfts", id)
                 await updateDoc(nftRef, nft)
                 window.location.reload()

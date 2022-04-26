@@ -13,7 +13,7 @@ function Mint() {
 
   const reach = loadStdlib(process.env);
   reach.setWalletFallback(reach.walletFallback({
-    providerEnv: 'TestNet', MyAlgoConnect 
+    providerEnv: 'MainNet', MyAlgoConnect 
   }))
 
   const [name, setName] = useState('')
@@ -55,7 +55,7 @@ function Mint() {
       ) 
       const nftCID = await client.put([new File([nftData],'metadata' )])
       const account = await reach.getDefaultAccount()
-      const ctc = account.contract(backend, ctcInfoStr)
+      const ctc = account.contract(backend)
       
       backend.creator(ctc, {
         metadata : nftCID,
@@ -67,11 +67,10 @@ function Mint() {
           await addDoc(collection(db, "nfts"), nft)
         }
       })
-      //const ctcInfoSt = await ctc.getInfo()
-      //console.log(Number(ctcInfoSt))
-      
-      //navigate('/')
-      setLoad(false)
+      const ctcInfoSt = await ctc.getInfo()
+      window.alert(Number(ctcInfoSt))
+      navigate('/')
+
     } catch(e) {
       setLoad(false)
       console.log(e)
